@@ -14,6 +14,8 @@ public class HbaseData {
     private ArrayList<String> columnList;
     private String column;
     private String value;
+    private String startRow;
+    private String stopRow;
     private HashMap<String, String> columnValuePair;
     private HashMap<String, HashMap<String, String>> record;
 
@@ -87,5 +89,21 @@ public class HbaseData {
 
     public void setColumnValuePair(HashMap<String, String> columnValuePair) {
         this.columnValuePair = columnValuePair;
+    }
+
+    public String getStartRow() {
+        return startRow;
+    }
+
+    public void setStartRow(String startRow) {
+        this.startRow = startRow;
+    }
+
+    public String getStopRow() {
+        return stopRow;
+    }
+
+    public void setStopRow(String stopRow) {
+        this.stopRow = stopRow;
     }
 }

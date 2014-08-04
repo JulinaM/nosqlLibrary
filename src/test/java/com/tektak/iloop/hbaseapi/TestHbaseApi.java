@@ -1,5 +1,6 @@
 package com.tektak.iloop.hbaseapi;
 
+import com.google.protobuf.ServiceException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,9 +13,9 @@ import java.util.HashMap;
 public class TestHbaseApi {
 
     @Test
-    public void Insert(){
+    public void Insert() throws IOException, ServiceException {
         HbaseData hbaseData = new HbaseData();
-        HbaseApi hbaseApi = new HbaseApi();
+        HbaseApi hbaseApi = new HbaseApi("kauwa");
         try {
             hbaseData.setTable("kauwa");
             HashMap<String, HashMap<String, String>> data =new HashMap<String, HashMap<String, String>>(1);
