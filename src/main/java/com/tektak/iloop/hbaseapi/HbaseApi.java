@@ -20,10 +20,8 @@ public class HbaseApi {
         this.hTable = ApiConnectionPool.gethConnection().getTable(tableName);
     }
 
-    public Set<HashMap<String, String>> MultiRowMultiColFetch(HbaseData hbaseData) throws
+    public HashMap<String, HashMap<String, String>> MultiRowMultiColFetch(HbaseData hbaseData) throws
             HbaseApiException.ValidationError, IOException {
-        if(hbaseData.getRow()== null || hbaseData.getRow().length() == 0)
-            throw new HbaseApiException.ValidationError("Invalid row name");
         if(hbaseData.getColFamily()== null || hbaseData.getColFamily().length() == 0)
             throw new HbaseApiException.ValidationError("Invalid column family name");
         if(hbaseData.getColumnList()== null || hbaseData.getColumnList().size() == 0)
@@ -42,7 +40,7 @@ public class HbaseApi {
             scan.addColumn(colFam, Bytes.toBytes(cols));
         }
         ResultScanner resultList = this.hTable.getScanner(scan);
-        Set<HashMap<String, String>> allData = new HashSet<HashMap<String, String>>();
+        HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
         try{
             for(Result result : resultList){
                 HashMap<String, String> resultSet = new HashMap<String, String>(hbaseData.getColumnList().size());
@@ -52,7 +50,7 @@ public class HbaseApi {
                             Bytes.toBytes(cols))));
                     }
                 }
-                allData.add(resultSet);
+                allData.put(Bytes.toString(result.getRow()),resultSet);
             }
         }finally {
             resultList.close();
