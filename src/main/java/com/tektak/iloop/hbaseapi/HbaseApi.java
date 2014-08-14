@@ -4,7 +4,10 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Dipak Malla
@@ -37,7 +40,7 @@ public class HbaseApi {
             scan.addColumn(colFam, Bytes.toBytes(cols));
         }
         ResultScanner resultList = this.hTable.getScanner(scan);
-        HashMap<String, HashMap<String, String>> allData = new HashMap<String,HashMap<String, String>>();
+        HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
         try{
             for(Result result : resultList){
                 HashMap<String, String> resultSet = new HashMap<String, String>(hbaseData.getColumnList().size());
