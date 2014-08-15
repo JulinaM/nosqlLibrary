@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="501f296b-b54f-441f-80d4-9e8948288060" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="501f296b-b54f-441f-80d4-9e8948288060" name="Default" comment="" />
     <ignored path="hbaseapi.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -651,12 +649,12 @@
       <workItem from="1407295004600" duration="4820000" />
       <workItem from="1407301223767" duration="6534000" />
       <workItem from="1408007638889" duration="3160000" />
-      <workItem from="1408073585867" duration="409000" />
+      <workItem from="1408073585867" duration="504000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28899000" />
+    <option name="totallyTimeSpent" value="28994000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1301" height="744" extended-state="6" />
