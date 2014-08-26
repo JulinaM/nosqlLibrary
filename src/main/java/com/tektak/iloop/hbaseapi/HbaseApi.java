@@ -101,7 +101,7 @@ public class HbaseApi {
         }
         this.hTable.put(put);
     }
-    public void DeleteRow(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
+    public void DeleteRowWithColumn(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
         if(hbaseData.getRow()== null || hbaseData.getRow().length() == 0)
             throw new HbaseApiException.ValidationError("Invalid row name");
         if(hbaseData.getColFamily()== null || hbaseData.getColFamily().length() == 0)
@@ -116,7 +116,7 @@ public class HbaseApi {
         this.hTable.delete(delete);
     }
 
-    public void DeleteColumns(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
+    public void DeleteRowWithColumnFamily(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
         if(hbaseData.getRow()== null || hbaseData.getRow().length() == 0)
             throw new HbaseApiException.ValidationError("Invalid row name");
         if(hbaseData.getColFamily()== null || hbaseData.getColFamily().length() == 0)
