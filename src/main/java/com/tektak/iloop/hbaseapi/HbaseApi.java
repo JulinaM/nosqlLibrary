@@ -115,6 +115,19 @@ public class HbaseApi {
         delete.deleteColumn(Bytes.toBytes(hbaseData.getColFamily()),Bytes.toBytes(hbaseData.getColumn()));
         this.hTable.delete(delete);
     }
+
+    public void DeleteColumns(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
+        if(hbaseData.getRow()== null || hbaseData.getRow().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid row name");
+        if(hbaseData.getColFamily()== null || hbaseData.getColFamily().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid column family name");
+        if(this.hTable == null) {
+            throw new HbaseApiException.ValidationError("Table instance not initialized");
+        }
+        Delete delete = new Delete(Bytes.toBytes(hbaseData.getRow()));
+        delete.deleteFamily(Bytes.toBytes(hbaseData.getColFamily()));
+        this.hTable.delete(delete);
+    }
     public void SingleRowColInsert(HbaseData hbaseData) throws HbaseApiException.ValidationError, IOException {
         if(hbaseData.getRow()== null || hbaseData.getRow().length() == 0)
             throw new HbaseApiException.ValidationError("Invalid row name");
