@@ -112,7 +112,7 @@ public class HbaseApi {
             throw new HbaseApiException.ValidationError("Table instance not initialized");
         }
         Delete delete = new Delete(Bytes.toBytes(hbaseData.getRow()));
-        delete.deleteColumn(Bytes.toBytes(hbaseData.getColFamily()),Bytes.toBytes(hbaseData.getColumn()));
+        delete.deleteColumns(Bytes.toBytes(hbaseData.getColFamily()),Bytes.toBytes(hbaseData.getColumn()));
         this.hTable.delete(delete);
     }
 
