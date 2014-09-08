@@ -1,4 +1,5 @@
 package com.tektak.iloop.hbaseapi;
+
 import com.google.protobuf.ServiceException;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -33,13 +34,16 @@ public class HbaseApi {
         if(hbaseData.getStopRow() != null){
             scan.setStopRow(Bytes.toBytes(hbaseData.getStopRow()));
         }
+        if(hbaseData.getMaxTimestamp() != 0 && hbaseData.getMinTimestamp() != 0) {
+            scan.setTimeRange(hbaseData.getMinTimestamp(), hbaseData.getMaxTimestamp());
+        }
         byte[] colFam = Bytes.toBytes(hbaseData.getColFamily());
         for(String cols : hbaseData.getColumnList()){
             scan.addColumn(colFam, Bytes.toBytes(cols));
         }
         ResultScanner resultList = this.hTable.getScanner(scan);
-        HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
         try{
+            HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
             for(Result result : resultList){
                 HashMap<String, String> resultSet = new HashMap<String, String>(hbaseData.getColumnList().size());
                 for(String cols : hbaseData.getColumnList()){
@@ -50,10 +54,11 @@ public class HbaseApi {
                 }
                 allData.put(Bytes.toString(result.getRow()),resultSet);
             }
+            return allData;
         }finally {
             resultList.close();
         }
-        return allData;
+
     }
 
     public HashMap<String, String> SingleRowMultiColFetch(HbaseData hbaseData) throws HbaseApiException.ValidationError,
@@ -81,7 +86,7 @@ public class HbaseApi {
             }
             return  resultSet;
         }
-        return null;
+        return  new HashMap<String, String>(0);
     }
     public void SingleRowMultiColInsert(HbaseData hbaseData) throws HbaseApiException.ValidationError,
             IOException {

@@ -18,6 +18,24 @@ public class HbaseData {
     private String stopRow;
     private HashMap<String, String> columnValuePair;
     private HashMap<String, HashMap<String, String>> record;
+    private long minTimestamp;
+    private long maxTimestamp;
+
+    public void setMaxTimestamp(long maxTimestamp) {
+        this.maxTimestamp = maxTimestamp;
+    }
+
+    public long getMaxTimestamp() {
+        return maxTimestamp;
+    }
+
+    public void setMinTimestamp(long minTimestamp) {
+        this.minTimestamp = minTimestamp;
+    }
+
+    public long getMinTimestamp() {
+        return minTimestamp;
+    }
 
     public String getTable() {
         return table;
