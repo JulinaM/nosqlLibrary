@@ -3,6 +3,7 @@ package com.tektak.iloop.hbaseapi;
 import com.google.protobuf.ServiceException;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.util.Hash;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,6 +57,50 @@ public class HbaseApi {
             }
             return allData;
         }finally {
+            resultList.close();
+        }
+
+    }
+
+    public HashMap<String, HashMap<String, String>> MultiRowMultiColFetchWithColumnTimestamp(HbaseData hbaseData) throws
+            HbaseApiException.ValidationError, IOException {
+        if(hbaseData.getColFamily()== null || hbaseData.getColFamily().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid column family name");
+        if(hbaseData.getColumnList()== null || hbaseData.getColumnList().size() == 0)
+            throw new HbaseApiException.ValidationError("Invalid column name");
+        if(this.hTable == null) {
+            throw new HbaseApiException.ValidationError("Table instance not initialized");
+        }
+        Scan scan = new Scan();
+        if(hbaseData.getStartRow() != null)
+            scan.setStartRow(Bytes.toBytes(hbaseData.getStartRow()));
+        if(hbaseData.getStopRow() != null){
+            scan.setStopRow(Bytes.toBytes(hbaseData.getStopRow()));
+        }
+        if(hbaseData.getMaxTimestamp() != 0 && hbaseData.getMinTimestamp() != 0) {
+            scan.setTimeRange(hbaseData.getMinTimestamp(), hbaseData.getMaxTimestamp());
+        }
+        byte[] colFam = Bytes.toBytes(hbaseData.getColFamily());
+        for(String cols : hbaseData.getColumnList()){
+            scan.addColumn(colFam, Bytes.toBytes(cols));
+        }
+
+        ResultScanner resultList = this.hTable.getScanner(scan);
+        try{
+            HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
+            for(Result result : resultList){
+                HashMap<String, String> resultSet = new HashMap<String, String>(hbaseData.getColumnList().size());
+                for(String cols : hbaseData.getColumnList()){
+                    if(result.containsColumn(colFam,Bytes.toBytes(cols))){
+                        resultSet.put(cols + "+" +result.getColumnCells(colFam, Bytes.toBytes(cols)).get(0).getTimestamp(),
+                                Bytes.toString(result.getValue(colFam, Bytes.toBytes(cols))));
+                    }
+                }
+                allData.put(Bytes.toString(result.getRow()),resultSet);
+            }
+            return allData;
+        }
+        finally {
             resultList.close();
         }
 
