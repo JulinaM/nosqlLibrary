@@ -26,13 +26,13 @@ public class FetchWithTimestamp {
         hbaseData.setColumnList(columnList);
         hbaseData.setStartRow("row");
         hbaseData.setStopRow("rowx");
-        hbaseData.setMaxTimestamp(1410160872595l);
-        hbaseData.setMinTimestamp(1410160855661l);
+        //hbaseData.setMaxTimestamp(1410160872595l);
+       // hbaseData.setMinTimestamp(1410160855661l);
       //  hbaseData.setTimestamp(1410160879165l);
 
 
     }
-    @Test
+   // @Test
     public void get() throws HbaseApiException.ValidationError, IOException {
         HashMap<String, HashMap<String, String>> result = hbaseApi.MultiRowMultiColFetch(hbaseData);
         for(Map.Entry<String, HashMap<String, String >> row : result.entrySet()){
@@ -40,6 +40,15 @@ public class FetchWithTimestamp {
                 System.out.println(col.getValue());
             }
         }
+    }
+
+    @Test
+    public void test() throws HbaseApiException.ValidationError, IOException {
+        hbaseData.setStartRow("row");
+        hbaseData.setStopRow("rowx");
+        hbaseData.setColFamily("h");
+        HashMap<String, HashMap<String, String>> result = hbaseApi.MultiRowMultiColFetchWithColumnTimestamp(hbaseData);
+        System.out.println(result);
     }
 
     @AfterClass
