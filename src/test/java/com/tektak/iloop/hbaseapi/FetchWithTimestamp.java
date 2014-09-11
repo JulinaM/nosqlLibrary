@@ -23,7 +23,7 @@ public class FetchWithTimestamp {
         ArrayList<String> columnList = new ArrayList<>();
         columnList.add("h");
 
-        hbaseApi = new HbaseApi("hello");
+        hbaseApi = new HbaseApi("usertest");
         hbaseData.setColFamily("h");
         hbaseData.setColumnList(columnList);
         hbaseData.setStartRow("row");
@@ -54,7 +54,7 @@ public class FetchWithTimestamp {
         System.out.println(result);
     }
 
-    @Test
+    //@Test
     public void multipleRowInsertTest() throws HbaseApiException.ValidationError, IOException {
         List<HbaseData> hbaseDatas = new ArrayList<>();
         HbaseData hbaseData = new HbaseData();
@@ -70,6 +70,12 @@ public class FetchWithTimestamp {
         hbaseData1.setValue("multiple13");
         hbaseDatas.add(hbaseData1);
         hbaseApi.MultipleRowInsertInBatch(hbaseDatas);
+    }
+    @Test
+    public void get1() throws HbaseApiException.ValidationError, IOException {
+        hbaseData.setColFamily("u");
+        hbaseData.setRow("u1abcde");
+        System.out.println(hbaseApi.SingleRowMultiColFetchWithColFam(hbaseData));
     }
 
     @AfterClass

@@ -5,10 +5,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Dipak Malla
@@ -129,6 +126,29 @@ public class HbaseApi {
             for (String cols : hbaseData.getColumnList()) {
                 resultSet.put(cols, Bytes.toString(result.getValue(Bytes.toBytes(hbaseData.getColFamily()),
                         Bytes.toBytes(cols))));
+            }
+            return resultSet;
+        }
+        return new HashMap<String, String>(0);
+    }
+    public HashMap<String, String> SingleRowMultiColFetchWithColFam(HbaseData hbaseData) throws HbaseApiException.ValidationError,
+            IOException {
+        if (hbaseData.getRow() == null || hbaseData.getRow().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid row name");
+        if (hbaseData.getColFamily() == null || hbaseData.getColFamily().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid column family name");
+        if (this.hTable == null) {
+            throw new HbaseApiException.ValidationError("Table instance not initialized");
+        }
+        Get get = new Get(Bytes.toBytes(hbaseData.getRow()));
+        get.addFamily(Bytes.toBytes(hbaseData.getColFamily()));
+        Result result = this.hTable.get(get);
+        this.setRowsCount(result.size());
+        if (this.getRowsCount() >= 1) {
+            HashMap<String, String> resultSet = new HashMap<String, String>(result.size());
+            NavigableMap<byte[],byte[]>  keyValue = result.getFamilyMap(Bytes.toBytes(hbaseData.getColFamily()));
+            for(NavigableMap.Entry<byte[], byte[]> row : keyValue.entrySet()){
+                resultSet.put(Bytes.toString(row.getKey()), Bytes.toString(row.getValue()));
             }
             return resultSet;
         }
