@@ -204,7 +204,7 @@ public class HbaseApi {
         if (this.hTable == null) {
             throw new HbaseApiException.ValidationError("Table instance not initialized");
         }
-        List<Put> puts = new ArrayList<>();
+        List<Put> puts = new ArrayList<>(hbaseDatas.size());
         for(HbaseData hbaseData : hbaseDatas) {
             if (hbaseData.getColFamily() == null || hbaseData.getColFamily().length() == 0)
                 throw new HbaseApiException.ValidationError("Invalid column family name");
