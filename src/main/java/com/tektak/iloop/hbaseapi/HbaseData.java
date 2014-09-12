@@ -42,7 +42,7 @@ public class HbaseData {
     }
 
     public void setTable(String table) throws HbaseApiException.EmptyTableName {
-        if(table == null || table.length() == 0)
+        if (table == null || table.length() == 0)
             throw new HbaseApiException.EmptyTableName("Empty or null table");
         this.table = table;
     }
@@ -60,12 +60,12 @@ public class HbaseData {
     }
 
     public void setRecord(HashMap<String, HashMap<String, String>> record) throws HbaseApiException.EmptyRecord {
-        if(record == null)
+        if (record == null)
             throw new HbaseApiException.EmptyRecord("Record is null");
-        if(record.isEmpty())
-            throw  new HbaseApiException.EmptyRecord("Record is empty");
-        if(record.entrySet().isEmpty())
-            throw  new HbaseApiException.EmptyRecord("Record is empty");
+        if (record.isEmpty())
+            throw new HbaseApiException.EmptyRecord("Record is empty");
+        if (record.entrySet().isEmpty())
+            throw new HbaseApiException.EmptyRecord("Record is empty");
         this.record = record;
     }
 

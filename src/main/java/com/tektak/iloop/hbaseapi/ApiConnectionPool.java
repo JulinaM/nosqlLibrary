@@ -15,16 +15,18 @@ import java.io.IOException;
  */
 public class ApiConnectionPool {
     private static HConnection hConnection;
+
     public static HConnection gethConnection() throws IOException, ServiceException {
-        if(hConnection == null) {
+        if (hConnection == null) {
             Configuration configuration = HBaseConfiguration.create();
             HBaseAdmin.checkHBaseAvailable(configuration);
             hConnection = HConnectionManager.createConnection(configuration);
         }
         return hConnection;
     }
+
     public static void closeHConncetion() throws IOException {
-        if(hConnection != null){
+        if (hConnection != null) {
             hConnection.close();
             hConnection = null;
         }
