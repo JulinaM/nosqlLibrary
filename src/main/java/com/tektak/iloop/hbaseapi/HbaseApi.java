@@ -4,10 +4,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Dipak Malla
@@ -56,6 +53,40 @@ public class HbaseApi {
             resultList.close();
         }
         return allData;
+    }
+
+    public HashMap<String, HashMap<String, String>> MultiRowAllColFetchWithColumnFamily(HbaseData hbaseData) throws
+            HbaseApiException.ValidationError, IOException {
+        if (hbaseData.getColFamily() == null || hbaseData.getColFamily().length() == 0)
+            throw new HbaseApiException.ValidationError("Invalid column family name");
+        if (this.hTable == null) {
+            throw new HbaseApiException.ValidationError("Table instance not initialized");
+        }
+        Scan scan = new Scan();
+        if (hbaseData.getStartRow() != null)
+            scan.setStartRow(Bytes.toBytes(hbaseData.getStartRow()));
+        if (hbaseData.getStopRow() != null) {
+            scan.setStopRow(Bytes.toBytes(hbaseData.getStopRow()));
+        }
+        byte[] colFam = Bytes.toBytes(hbaseData.getColFamily());
+        scan.addFamily(colFam);
+
+        ResultScanner resultList = this.hTable.getScanner(scan);
+
+        try {
+            HashMap<String, HashMap<String, String>> allData = new HashMap<String, HashMap<String, String>>();
+            for(Result result:resultList){
+                NavigableMap<byte[],byte[]> keyValue = result.getFamilyMap(Bytes.toBytes(hbaseData.getColFamily()));
+                HashMap<String,String> resultSet = new HashMap<String, String>(result.size());
+                for (NavigableMap.Entry<byte[],byte[]> row: keyValue.entrySet()){
+                    resultSet.put(Bytes.toString(row.getKey()),Bytes.toString(row.getValue()));
+                }
+                allData.put(Bytes.toString(result.getRow()), resultSet);
+            }
+            return allData;
+        } finally {
+            resultList.close();
+        }
     }
 
     public HashMap<String, String> SingleRowMultiColFetch(HbaseData hbaseData) throws HbaseApiException.ValidationError,
