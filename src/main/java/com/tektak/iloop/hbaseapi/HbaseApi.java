@@ -276,9 +276,13 @@ public class HbaseApi {
         this.hTable.put(put);
     }
 
-    public void Close() throws IOException {
+    public void Close() {
         if (this.hTable != null)
-            this.hTable.close();
+            try {
+                this.hTable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     public void Insert(HbaseData hbaseData) throws IOException,
