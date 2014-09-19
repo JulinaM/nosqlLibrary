@@ -262,12 +262,21 @@ public class HbaseApi {
         for(HbaseData hbaseData : hbaseDatas) {
             if (hbaseData.getColFamily() == null || hbaseData.getColFamily().length() == 0)
                 throw new HbaseApiException.ValidationError("Invalid column family name");
-            if (hbaseData.getColumn() == null || hbaseData.getColumn().length() == 0)
-                throw new HbaseApiException.ValidationError("Invalid column name");
+            if (hbaseData.getColumn() == null && hbaseData.getColumnValuePair() == null)
+                throw new HbaseApiException.ValidationError("No column specified");
             Put put = new Put(Bytes.toBytes(hbaseData.getRow()));
-            put.add(Bytes.toBytes(hbaseData.getColFamily()), Bytes.toBytes(hbaseData.getColumn()),
+
+            if(hbaseData.getColumnValuePair() != null)
+                for(Map.Entry<String, String> col: hbaseData.getColumnValuePair().entrySet()) {
+                    put.add(Bytes.toBytes(hbaseData.getColFamily()), Bytes.toBytes(col.getKey()),
+                            Bytes.toBytes(col.getValue()));
+                    puts.add(put);
+                }
+            else{
+                put.add(Bytes.toBytes(hbaseData.getColFamily()), Bytes.toBytes(hbaseData.getColumn()),
                     Bytes.toBytes(hbaseData.getValue()));
-            puts.add(put);
+                puts.add(put);
+            }
         }
         this.hTable.put(puts);
     }
